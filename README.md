@@ -3,3 +3,7 @@ rpg-41-the-big-3 created by GitHub Classroom
 
 *Mohammad:*
 I am going to work on part A
+
+
+*Wei:*
+Part B
