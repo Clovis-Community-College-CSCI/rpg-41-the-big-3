@@ -10,7 +10,7 @@ Part B, Bridges
 
 Person C - "JJK Curse Lord" : Khai Dizon
 
-(Opted out of Person D - "Sephiroth, Master of the Tree")
+Person D - "Sephiroth, Master of the Tree" : Jacob Wasserman
 
 Game Idea:
 Simple Treasure Extraction RPG:
