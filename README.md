@@ -6,7 +6,7 @@ I am going to work on part A
 
 
 *Wei:*
-Part B
+Part B, Bridges
 
 Person C - "JJK Curse Lord" : Khai Dizon
 
