@@ -11,24 +11,12 @@
 using namespace bridges;
 using namespace std;
 
-class LL {
-
-  public:
-    int data;
-    LL* prev;
-    LL* next;
-
-    LL(int x) {
-        data = x;
-    }
-
-};
-
+//Initiative class
 class HasInitiative {
     int speed;
 
     void set_speed(int newSpeed) {
-        if (newSpeed >= 1 || newSpeed <= 40) {
+        if (newSpeed >= 1 && newSpeed <= 40) {
             speed = newSpeed;
         } else {
             cout << "ERROR!\n";
@@ -36,45 +24,53 @@ class HasInitiative {
         }
     }
 };
-
+//D20 dice
 void dice() {
     srand(time(0));
     int rando = (rand() % 20) + 1;
-    cout << rando << endl;
+    //cout << rando << endl;
 }
 
 int main() {
 
-    dice();
+    //Testing Dice
+    /*  string in = "";
+        cout << "INPUT: ";
+        cin >> in;
+        while (in != "Exit") {
+        cout << dice() << endl;
+        cin >> in;
+        }
 
-    // create Bridges object, set credentials
+    */
+
+    // create Bridges object
     Bridges bridges(1, "ForgotName",
                     "1362253532750");
 
-    // set title, description
-    bridges.setTitle("A Simple  Binary Search Tree Example");
-    bridges.setDescription("This example illustrates a binary search tree built using BRIDGES");
+    //----------------------------------WALL------------------------------------------
+	//Loop to connnect Bridges and list for entities.
+	CircDLelement<string> *turn = nullptr;
+    vector<CircDLelement<string>*> storage;
+    while (true) {
+        string input = read("Enter Name (Type SNAPSHOT to view in bridges): ");
+        if (input == "SNAPSHOT") break;
+        CircDLelement<string> *entity = new CircDLelement<string>(to_string(dice()), input);
+        storage.push_back(entity);
 
-    // we will create the tree manually in this example
+    }
 
-    CircDLelement<string> *first = new CircDLelement<string>("#1", "#TEMP1");
-    CircDLelement<string> *secon = new CircDLelement<string>("#2", "#TEMP2");
-    CircDLelement<string> *third = new CircDLelement<string>("#3", "#TEMP3");
+    for (int i = 0; i < storage.size(); i++) {
+        storage[i]->setNext(storage[(i + 1) % storage.size()]);
+    }
 
-    first->setNext(secon);
-    secon->setNext(third);
-    //secon->setPrev(first);
-    third->setNext(first);
-    //third->setPrev(secon);
+    turn = storage[0];
 
-    //first->setPrev(third);
-
-
-    bridges.setDataStructure(first);
+    bridges.setDataStructure(turn);
     bridges.visualize();
-    delete first;
-    delete secon;
-    delete third;
+    for (auto x : storage) {
+        delete x;
+    }
+
     return 0;
 }
-
