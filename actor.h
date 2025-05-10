@@ -26,6 +26,9 @@ class Hero : public Actor {
 			maxHealth = 100;
 			maxShield = 50;
 		}
+		// *Note: for a hero to deal damage, they will use a monsters take damage and do something like this:
+		// Monster m; hero h; m.take_damage(h.get_damage()); 
+		// so damage refers to how much damage they do but take_damage is how they lose health/shield (also players lose shield first, once its 0, then they will lose health)
 		virtual int get_health() const { return health; }
 		virtual int get_shield() const { return shield; }
 		virtual int get_damage() const { return damage; }
@@ -158,4 +161,72 @@ class Wizard : public Hero {
 			if (health > maxHealth) health = maxHealth;
 		}
 	}
+};
+
+class Monster : public Actor {
+	protected:
+		int health = 50;
+		int damage = 20;
+	public:
+		Monster() {
+			health = 50;
+			damage = 20;
+		}
+		virtual int get_health() { return health; }
+		virtual int get_damage() { return damage; }
+		virtual void take_damage(int newDamage) {
+			health -= newDamage;
+			if (health < 0) health = 0;
+		}
+};
+
+class Ogre : public Monster {
+	//Ogres are just an easy monster, but they spawm the most
+	public:
+		Ogre() : Monster() {
+			health = 30;
+		}
+};
+
+class ColdKiller : public Monster {
+	//ColdKillers are just a Cold Killer, do a lot of damage and have low health
+	public:
+		ColdKiller() : Monster() {
+			damage = 50;
+			health = 25;
+		}
+};
+
+class Chimera : public Monster {
+	// Chimeras are a special type of monster that only take damage from every other hit (so like if you hit for 30 damage and then 50, it will only take 50 damage)
+	bool hit = false;
+	public:
+	Chimera() : Monster() {
+		damage = 30;
+		health = 75;
+	}
+	void take_damage(int newDamage) override {
+		if (hit) {
+			health -= newDamage;
+			if (health < 0) health = 0;
+		}
+		else hit = true;
+	}
+};
+
+class Hydra : public Monster {
+	// The final boss. ton of health and damage, also every other hit doesnt work like a chimera
+	bool hit = false;
+	public: 
+		Hydra() : Monster() {
+			health = 300;
+			damage = 75;
+		}
+		void take_damage(int newDamage) override {
+			if (hit) {
+				health -= newDamage;
+				if (health < 0) health = 0;
+			}
+			else hit = true;
+		}
 };
