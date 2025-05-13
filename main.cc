@@ -1,10 +1,16 @@
-#include <iostream>
-#include <string>
+#include "menu.h"
+#include "game.h"
 #include "actor.h"
-//everyone can add their header files here when ready
+#include <iostream>
+
 using namespace std;
 
-int main() { 
-	// for now just here to ensure header files r working correctly
-	cout << "Work in progress..\n";
+int main() {
+
+	int choice = showMenu();
+
+	if (choice == 0) {
+		startGame();
+	}
+	return 0;
 }
