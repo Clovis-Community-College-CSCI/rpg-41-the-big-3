@@ -1,5 +1,6 @@
 #include "menu.h"
 #include "game.h"
+#include "actor.h"
 #include <iostream>
 
 using namespace std;
