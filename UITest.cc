@@ -1,23 +1,29 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <string>
+#include <unistd.h>
 
 int main() {
 	initscr();
 	cbreak();
 	noecho();
-	keypad(stdscr, TRUE);
 	curs_set(0);
+	keypad(stdscr, TRUE);
+	nodelay(stdscr, TRUE);
+	timeout(0);
 
-	if (has_colors() == FALSE) {
+	if (!has_colors()) {
 		endwin();
 		printf("Your terminal does not support color\n");
 		return 1;
 	}
 
 	start_color();
+	use_default_colors();
+	
 	init_pair(1, COLOR_BLACK, COLOR_WHITE);
 	init_pair(2, COLOR_WHITE, COLOR_BLACK);
+	init_pair(3, COLOR_RED, -1);
 
 	int height;
 	int width;
@@ -30,16 +36,25 @@ int main() {
 	
 	WINDOW* menu = newwin(win_height, win_width, starty, startx);
 	keypad(menu, TRUE);
-	box(menu, 0, 0);
-	refresh();
-
-	const char* options[2] = {"Play", "Quit" };
+	
+	const char* options[2] = {"Play", "Quit"};
 	int choice = 0;
 	int num_options = 2;
+
+	int frame = 0;
+	int colorCycle[] = {COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, COLOR_BLUE, COLOR_MAGENTA};
+	int numColors = sizeof(colorCycle) / sizeof(colorCycle[0]);
 
 	bool running = true;
 	
 	while (running) {
+
+		werase(menu);
+
+		wattron(menu, COLOR_PAIR(3));
+		wborder(menu, '|','|','-','-','+','+','+','+');
+		wattroff(menu, COLOR_PAIR(3));
+
 		for (int i = 0; i < num_options; i++) {
 			if (i == choice){
 				wattron(menu, COLOR_PAIR(1));
@@ -48,7 +63,7 @@ int main() {
 			}
 
 			int text_x = (win_width - std::string(options[i]).length()) / 2;
-			int text_y = 3 + i * 2;
+			int text_y = 20 + i * 2;
 
 			mvwprintw(menu, text_y, text_x, "%s", options[i]);
 			
@@ -57,9 +72,11 @@ int main() {
 		}
 
 		wrefresh(menu);
+	
 		int input = wgetch(menu);
 		//mvprintw(height - 1, 0, "KEY INPUT: %d", input); //debug
 		//refresh(); 
+		if (input != ERR) {
 		switch (input) {
 			case KEY_UP:
 				choice = (choice - 1 + num_options) % num_options;
@@ -80,8 +97,8 @@ int main() {
 				}
 				break;
 			}
-			werase(menu);
-			box(menu, 0, 0);
+		}
+	
 	}
 	
 	delwin(menu);
