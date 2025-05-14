@@ -78,6 +78,8 @@ void startCombat(Hero* player, Monster* monster, WINDOW* win) {
 						mvwprintw(combatWin, 10, 2, "You escaped!");
 						wgetch(combatWin);
 						napms(1000);
+						werase(combatWin);
+						wrefresh(combatWin);
 						delwin(combatWin);
 						return;
 					} else {
