@@ -106,14 +106,41 @@ void Map::drawWorldMap(WINDOW* win, int currentY, int currentX) const {
 	int winWidth;
 	getmaxyx(win, winHeight, winWidth);
 
-	for (int y = 0; y < winHeight; y++){
-		for (int x = 0; x < winWidth; x++){
-			if (y >= 0 && y <WORLD_HEIGHT && x >= 0 && x < WORLD_WIDTH) {
-				char symbol = (data[y][x] == WALL) ? '#' : ' ';
-				mvwaddch(win, y, x, symbol);
+	const int minimapWidth = 80;
+	const int minimapHeight = 40;
+
+	float scaleX = (float)WORLD_WIDTH / minimapWidth;
+	float scaleY = (float)WORLD_HEIGHT / minimapHeight;
+
+	int startX = (winWidth - minimapWidth) /2;
+	int startY = (winHeight - minimapHeight) /2;
+
+	for (int y = 0; y < minimapHeight; y++){
+		for (int x = 0; x < minimapWidth; x++){
+			int worldX = (int)(x * scaleX);
+			int worldY = (int)(y * scaleY);
+
+			if (x == (int)(playerX / scaleX) && y == (int)(playerY / scaleY)) {
+				worldX = playerX;
+				worldY = playerY;
+			}
+			char symbol;
+			bool isHero = (worldX == playerX && worldY == playerY);
+
+			if (isHero) {
+				wattron(win, COLOR_PAIR(3) | A_BOLD);
+				mvwaddch(win, startY + y, startX + x, '@');
+				wattroff(win, COLOR_PAIR(3) | A_BOLD);
+			} else  {
+				symbol = (data[worldY][worldX] == WALL) ? '#' : ' ';
+				mvwaddch(win, startY + y, startX + x, symbol);
+	
 			}
 		}
 	}
+	wattron(win, COLOR_PAIR(3));
+	box(win, 0, 0);
+	wattroff(win, COLOR_PAIR(3));
 }
 
 //Dungeon Generation

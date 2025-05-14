@@ -37,7 +37,7 @@ void startGame(Hero* player, InventoryBST& inventory) {
 	init_pair(1, COLOR_WHITE, COLOR_BLACK);
 	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 	init_pair(3, COLOR_GREEN, -1);
-	init_pair(4, COLOR_RED, COLOR_BLACK);
+	init_pair(4, COLOR_CYAN, -1);
 
 	int height, width;
 	getmaxyx(stdscr, height, width);
@@ -137,8 +137,12 @@ void startGame(Hero* player, InventoryBST& inventory) {
 			printInventory(gameWin, inventory.getRoot(), row);
 		}
 		else if (currentTab == 1) {
-			auto pos = gameMap.getPlayerPos();
-			gameMap.drawWorldMap(gameWin, pos.second, pos.first);
+			werase(gameWin);
+
+			gameMap.drawWorldMap(gameWin, player->get_y(), player->get_x());
+			wattron(gameWin, COLOR_PAIR(3));
+			mvwprintw(gameWin, 3, (win_width - 10) /2, "MINIMAP");
+			wattroff(gameWin, COLOR_PAIR(3));
 		}
 		else if (currentTab == 2) {
 			mvwprintw(gameWin, 4, 4, "Character Stats:");
