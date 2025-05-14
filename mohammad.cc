@@ -18,4 +18,6 @@ int main() {
 	cout << t.get_health() << endl;
 	t.increase_health(60);
 	cout << t.get_health() << endl;
+	//yo.set_speed(20);
+	cout << yo.get_actorSpeed() << endl;
 }
