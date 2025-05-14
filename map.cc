@@ -23,7 +23,7 @@ void GameMap::draw(WINDOW* win) const {
 				mvwaddch(win, y+2, x+2, '@');
 				wattroff(win, COLOR_PAIR(3));
 			} else {
-				mvaddch(win, y+2, x+2, grid[y][x]);
+				mvwaddch(win, y+2, x+2, grid[y][x]);
 			}
 		}
 	}
@@ -33,7 +33,7 @@ void GameMap::drawWorldMap(WINDOW* win, int currentY, int currentX) const {
 	int mapHeight = 10;
 	int mapWidth = 30;
 	int startY = (getmaxy(win) - mapHeight) /2;
-	int startx = (getmaxx(win) - mapWidth) /2;
+	int startX = (getmaxx(win) - mapWidth) /2;
 
 	wattron(win, COLOR_PAIR(3));
 	box(win, 0, 0);
@@ -47,7 +47,7 @@ bool GameMap::movePlayer(int dy, int dx) {
 	int newX = playerPos.first + dx;
 	int newY = playerPos.second + dy;
 
-	if (newX >= && newX < width && newY >= 0 && newY < height && grid[newY][newX] != '#') {
+	if (newX >= 0 && newX < width && newY >= 0 && newY < height && grid[newY][newX] != '#') {
 		playerPos.first = newX;
 		playerPos.second = newY;
 		return true;

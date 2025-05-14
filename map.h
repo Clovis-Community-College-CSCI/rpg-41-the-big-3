@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <utility>
+#include <ncurses.h>
 
 class GameMap{
 private:
@@ -12,8 +13,8 @@ private:
 public: 
 	GameMap();
 	void draw(WINDOW* win) const;
-	void draw(WINDOW* win, int currentY, int currentX) const;
+	void drawWorldMap(WINDOW* win, int currentY, int currentX) const;
 	bool movePlayer(int dy, int dx);
-	std::pair<<int, int> getPlayerPos() const {return playerPos; }
+	std::pair<int, int> getPlayerPos() const {return playerPos; }
 };
 

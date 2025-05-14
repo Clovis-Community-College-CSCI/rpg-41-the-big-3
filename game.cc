@@ -165,10 +165,10 @@ void startGame(Hero* player, InventoryBST& inventory) {
 		int ch = wgetch(gameWin);
 		if (ch != ERR) {
 			switch (ch) {
-				case 'w': case KEY_UP: gameMap.movePlayer(-1, 0); break;
-				case 's': case KEY_DOWN: gameMap.movePlayer(1, 0); break;
-				case 'a': case KEY_LEFT: gameMap.movePlayer(0, -1); break;
-				case 'd': case KEY_RIGHT: gameMap.movePlayer(0, 1); break;
+				case 'w': gameMap.movePlayer(-1, 0); break;
+				case 's': gameMap.movePlayer(1, 0); break;
+				case 'a': gameMap.movePlayer(0, -1); break;
+				case 'd': gameMap.movePlayer(0, 1); break;
 
 				case 'm':
 					if (currentMode == MAIN_GAME)
