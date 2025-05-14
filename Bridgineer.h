@@ -62,6 +62,7 @@ int dice_test() {
     cout << rando << endl;
     return rando;
 }
+
 //=================+Bridges Stuff+=====================
 /*
 int main() {
@@ -84,6 +85,7 @@ int main() {
         HasInitiative *entity = new HasInitiative(input, input2);
 
         string label = input + " - Initiative: " + to_string(entity->initiative);
+
         storage.push_back(new CircDLelement<HasInitiative>(*entity, label));
 
         delete entity;
@@ -96,7 +98,9 @@ int main() {
     }
         );
 
+
     int sizee = storage.size();
+
     for (int i = 0; i < sizee; i++) {
         storage[i]->setNext(storage[(i + 1) % storage.size()]);
         storage[i]->setPrev(storage[(((i - 1) + storage.size()) % storage.size())]);
