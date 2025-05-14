@@ -14,7 +14,17 @@ public:
 	std::pair<int, int> getPlayerPos() const;
 	void draw(WINDOW* win, int playerX, int playerY) const;
 	void drawWorldMap(WINDOW* win, int currentY, int currentX) const;
+	void generateDungeon(int maxRooms);
 private:
+	struct Room {
+		int x, y;
+		int width, height;
+	};
+
+	bool canPlaceRoom(const Room& room);
+	void createRoom(const Room& room);
+	void connectRooms(const Room& a, const Room& b);
+
 	static const int WORLD_WIDTH = 500;
 	static const int WORLD_HEIGHT = 500;
 	static const int SCREEN_WIDTH = 150;

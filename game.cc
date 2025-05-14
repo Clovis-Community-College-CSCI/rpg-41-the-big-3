@@ -34,9 +34,10 @@ void startGame(Hero* player, InventoryBST& inventory) {
 	
 	start_color();
 	use_default_colors();
-	init_pair(1, COLOR_BLACK, COLOR_WHITE);
-	init_pair(2, COLOR_WHITE, -1);
+	init_pair(1, COLOR_WHITE, COLOR_BLACK);
+	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 	init_pair(3, COLOR_GREEN, -1);
+	init_pair(4, COLOR_RED, COLOR_BLACK);
 
 	int height, width;
 	getmaxyx(stdscr, height, width);
