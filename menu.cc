@@ -8,8 +8,8 @@ Hero* showMenu(InventoryBST& inventory) {
     noecho();
     curs_set(0);
     keypad(stdscr, TRUE);
-    nodelay(stdscr, TRUE);
-    timeout(0);
+    //nodelay(stdscr, TRUE);
+    //timeout(0);
 
     if (!has_colors()) {
         endwin();
@@ -41,6 +41,7 @@ Hero* showMenu(InventoryBST& inventory) {
     int num_options = 2;
 
     bool running = true;
+	Hero* selectHero = nullptr;
 
     while (running) {
 

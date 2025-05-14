@@ -11,15 +11,10 @@ int main() {
     // Show the menu and let the player pick a hero class, populating inventory with starter items
     Hero* player = showMenu(inventory);
 
-    // If player chose to quit, exit
-    if (player == nullptr) {
-        std::cout << "Goodbye!\n";
-        return 0;
-    }
-
-    // Start the main game loop (ncurses UI, map, combat, inventory, etc.)
-    startGame(player, inventory);
-
+	  if (player != nullptr) {
+		  startGame(player, inventory);
+		  delete player;
+	}
     // Game over
     std::cout << "Thanks for playing!\n";
     return 0;
