@@ -16,7 +16,7 @@ void printInventory(WINDOW* win, BSTNode* node, int& row) {
 	printInventory(win, node->right, row);
 }
 
-void startGame() {
+void startGame(Hero* player, InventoryBST& inventory) {
 	//initialize
 	initscr();
 	cbreak();
@@ -70,12 +70,6 @@ void startGame() {
 	nodelay(gameWin, TRUE);
 
 	//Game Components 
-	Hero* player = new Tank();
-	InventoryBST inventory;
-	inventory.addItem("Health Potion", 3, 50, 20);
-	inventory.addItem("Mana Elixer", 2, 70, 15);
-	inventory.addItem("Key of Wisdom", 1, 0, 0, true);
-
 	const char* tabs[] = {"Inventory", "Map", "Character"};
 	int currentTab = 0;
 	int numTabs = sizeof(tabs) / sizeof(tabs[0]);
