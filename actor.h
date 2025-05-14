@@ -9,7 +9,8 @@ class Actor : public HasInitiative { // base class for all moving characters, in
 		int speed = 10;
 	public:
 		Actor() : HasInitiative() {}
-		virtual int get_actorSpeed() { return speed; }
+		// USE THIS NEXT LINE TO GET THE SPEED, NOT get_speed() !!!!!
+		virtual int get_actorSpeed() { return speed; } 
 		virtual void roll_dice() {
 			HasInitiative::roll_Ini();
 			srand(time(0));

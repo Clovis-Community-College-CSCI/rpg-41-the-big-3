@@ -1,6 +1,7 @@
 #include "game.h"
 #include "actor.h"
 #include "inventory.h"
+#include "map.h"
 //#include "Bridgineer.h"
 #include <ncurses.h>
 #include <unistd.h>
@@ -68,8 +69,11 @@ void startGame(Hero* player, InventoryBST& inventory) {
 	WINDOW* gameWin = newwin(win_height, win_width, starty, startx);
 	keypad(gameWin, TRUE);
 	nodelay(gameWin, TRUE);
-
+	
 	//Game Components 
+	GameMap gameMap;
+	bool mapVisible = false;
+
 	const char* tabs[] = {"Inventory", "Map", "Character"};
 	int currentTab = 0;
 	int numTabs = sizeof(tabs) / sizeof(tabs[0]);
@@ -100,11 +104,15 @@ void startGame(Hero* player, InventoryBST& inventory) {
 
 		//Game View
 		if (currentMode == MAIN_GAME) {
-			wattron(gameWin, COLOR_PAIR(3));
-			mvwprintw(gameWin, 4, 4, "Main Game Running...");
-			mvwprintw(gameWin, 6, 4, "Press ESC to open your menu.");
-			wattroff(gameWin, COLOR_PAIR(3));
-		} else {
+			if (mapVisible) {
+				auto pos = gameMap.getPlayerPos();
+				gameMap.drawWorldMap(gameWin, pos.second, pos.first);
+				mvwprintw(gameWin, 2, 4, "World Map (Press 'm' to exit)");
+			} else {
+				gameMap.draw(gameWin);
+			}
+		}
+		else {
 		//Tab Menu	
 		int tab_row = win_height - 4;
 		int spacing = win_width / (numTabs + 1);
@@ -123,21 +131,21 @@ void startGame(Hero* player, InventoryBST& inventory) {
 			wattroff(gameWin, COLOR_PAIR(1));
 			wattroff(gameWin, COLOR_PAIR(2));
 		}
-
+		//Tab Content
 		if (currentTab ==  0) {
 			mvwprintw(gameWin, 4, 4, "Inventory:");
 			int row = 6;
 			printInventory(gameWin, inventory.getRoot(), row);
 		}
 		else if (currentTab == 1) {
-			mvwprintw(gameWin, 4, 4, "Map: (Work in progess)");
+			auto pos = gameMap.getPlayerPos();
+			gameMap.drawWorldMap(gameWin, pos.second, pos.first);
 		}
 		else if (currentTab == 2) {
 			mvwprintw(gameWin, 4, 4, "Character Stats:");
 			mvwprintw(gameWin, 6, 4, "Health: %d", player->get_health());
 			mvwprintw(gameWin, 7, 4, "Shield: %d", player->get_shield());
 			mvwprintw(gameWin, 8, 4, "Damage: %d", player->get_damage());
-			//mvwprintw(gameWin, 9, 4, "Initiative: %d", playerInit->initiative);
 			}
 		}
 
@@ -145,17 +153,25 @@ void startGame(Hero* player, InventoryBST& inventory) {
 		
 		move(LINES - 1, 0);
 		clrtoeol();
-
-		if (currentMode == MAIN_GAME)
-			mvprintw(LINES -1, 2, "Press ESC to open menu or press q to quit.");
-		else
-			mvprintw(LINES - 1, 2, "Use LEFT/RIGHT arrows to switch tabs. Press q to quit.");
+		if (currentMode == MAIN_GAME){
+			mvprintw(LINES -1, 2, "Move: Arrow Keys | Menu: ESC | Map: m | Quit: q");
+		} else {
+			mvprintw(LINES - 1, 2, "Navigate: LEFT/RIGHT | Close Menu: ESC | Quit: q");
+		}
 		refresh();
 
 		int ch = wgetch(gameWin);
-
 		if (ch != ERR) {
-		switch (ch) {
+			switch (ch) {
+				case 'w': gameMap.movePlayer(-1, 0); break;
+				case 's': gameMap.movePlayer(1, 0); break;
+				case 'a': gameMap.movePlayer(0, -1); break;
+				case 'd': gameMap.movePlayer(0, 1); break;
+
+				case 'm':
+					if (currentMode == MAIN_GAME)
+						mapVisible = !mapVisible;
+					break;
 			case 27: //ESC Key
 				if (currentMode == MAIN_GAME)
 					currentMode = TAB_MENU;
@@ -176,7 +192,6 @@ void startGame(Hero* player, InventoryBST& inventory) {
 			}
 		}
 	}
-	delete player;
 	delwin(gameWin);
 	endwin();
 }
