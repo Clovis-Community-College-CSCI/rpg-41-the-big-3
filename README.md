@@ -20,4 +20,7 @@ Simple Treasure Extraction RPG:
 Can fight monsters in the dungeon and use some of the treasure items to fight.
 
 
+README POINTS:
 
+A)
+<span style="color:red">This text is red</span>
