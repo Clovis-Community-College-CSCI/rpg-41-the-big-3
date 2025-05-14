@@ -2,6 +2,35 @@
 #include <ncurses.h>
 #include <string>
 
+void drawMenu(WINDOW* win, const char* options[], int num_options, int choice, int win_width, const char* header = nullptr) {
+        werase(win);
+        wattron(win, COLOR_PAIR(3));
+        wborder(win, '|','|','-','-','+','+','+','+');
+        wattroff(win, COLOR_PAIR(3));
+		
+		if (header != nullptr) {
+			int header_x = (win_width - std::string(header).length()) /2;
+			mvwprintw(win, 18, header_x, "%s", header);
+		}
+
+        for (int i = 0; i < num_options; i++) {
+            if (i == choice){
+                wattron(win, COLOR_PAIR(1));
+            } else {
+                wattron(win, COLOR_PAIR(2));
+            }
+
+            int text_x = (win_width - std::string(options[i]).length()) / 2;
+            int text_y = 20 + i * 2;
+
+            mvwprintw(win, text_y, text_x, "%s", options[i]);
+
+            wattroff(win, COLOR_PAIR(1));
+            wattroff(win, COLOR_PAIR(2));
+        }
+		wrefresh(win);
+}
+
 Hero* showMenu(InventoryBST& inventory) {
     initscr();
     cbreak();
@@ -44,30 +73,8 @@ Hero* showMenu(InventoryBST& inventory) {
 	Hero* selectHero = nullptr;
 
     while (running) {
-
-        werase(menu);
-
-        wattron(menu, COLOR_PAIR(3));
-        wborder(menu, '|','|','-','-','+','+','+','+');
-        wattroff(menu, COLOR_PAIR(3));
-
-        for (int i = 0; i < num_options; i++) {
-            if (i == choice){
-                wattron(menu, COLOR_PAIR(1));
-            } else {
-                wattron(menu, COLOR_PAIR(2));
-            }
-
-            int text_x = (win_width - std::string(options[i]).length()) / 2;
-            int text_y = 20 + i * 2;
-
-            mvwprintw(menu, text_y, text_x, "%s", options[i]);
-
-            wattroff(menu, COLOR_PAIR(1));
-            wattroff(menu, COLOR_PAIR(2));
-        }
-
-        wrefresh(menu);
+		drawMenu(menu, options, num_options, choice, win_width);
+        
 		int input = wgetch(menu);
         
 		//mvprintw(height - 1, 0, "KEY INPUT: %d", input); //debug
@@ -81,7 +88,11 @@ Hero* showMenu(InventoryBST& inventory) {
                 choice = (choice +1) % num_options;
                 break;
             case 10:
-                    running = false;
+                if (choice == 1) {
+					endwin();
+					return nullptr;
+				}
+				running = false;
                 break;
             }
         }
@@ -93,27 +104,11 @@ Hero* showMenu(InventoryBST& inventory) {
 	int classCount = 4;
 	bool choosing = true;
 	
+	const char* header = "Choose your class:";
+	
 	while (choosing) {
-		werase(menu);
-        wattron(menu, COLOR_PAIR(3));
-        wborder(menu, '|','|','-','-','+','+','+','+');
-        wattroff(menu, COLOR_PAIR(3));
-		
-		mvwprintw(menu, 8, (win_width - 20) / 2, "Choose Your Class:");
-
-		for (int i = 0; i < classCount; i++) {
-			if (i == classChoice) wattron(menu, COLOR_PAIR(1));
-			else wattron(menu, COLOR_PAIR(2));
-			
-			int text_x = (win_width - std::string(classes[i]).length()) /2;
-			int text_y = 12 + i * 2;
-			mvwprintw(menu, text_y, text_x, "%s", classes[i]);
-
-			wattroff(menu, COLOR_PAIR(1));
-			wattroff(menu, COLOR_PAIR(2));
-		}
-	wrefresh(menu);
-	int input = wgetch(menu);
+		drawMenu(menu, classes, classCount, classChoice, win_width, header);
+		int input = wgetch(menu);
 
     if (input != ERR) {
     	switch (input) {

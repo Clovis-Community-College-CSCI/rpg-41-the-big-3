@@ -110,9 +110,6 @@ void startGame(Hero* player, InventoryBST& inventory) {
 				mvwprintw(gameWin, 2, 4, "World Map (Press 'm' to exit)");
 			} else {
 				gameMap.draw(gameWin);
-				auto pos = gameMap.getPlayerPos();
-				mvwprintw(gameWin, 1, 4, "Position: (%d, %d)", pos.first, pos.second);
-				mvwprintw(gameWin, 2, 4, "Move: Arrow Keys | Menu: ESC | Map: m");
 			}
 		}
 		else {
@@ -141,7 +138,8 @@ void startGame(Hero* player, InventoryBST& inventory) {
 			printInventory(gameWin, inventory.getRoot(), row);
 		}
 		else if (currentTab == 1) {
-			mvwprintw(gameWin, 4, 4, "Map: (Work in progess)");
+			auto pos = gameMap.getPlayerPos();
+			gameMap.drawWorldMap(gameWin, pos.second, pos.first);
 		}
 		else if (currentTab == 2) {
 			mvwprintw(gameWin, 4, 4, "Character Stats:");
@@ -194,7 +192,6 @@ void startGame(Hero* player, InventoryBST& inventory) {
 			}
 		}
 	}
-	delete player;
 	delwin(gameWin);
 	endwin();
 }

@@ -15,6 +15,6 @@ public:
 	void draw(WINDOW* win) const;
 	void drawWorldMap(WINDOW* win, int currentY, int currentX) const;
 	bool movePlayer(int dy, int dx);
-	std::pair<int, int> getPlayerPos() const {return playerPos; }
+	std::pair<int, int> getPlayerPos() const { return playerPos; }
 };
 
