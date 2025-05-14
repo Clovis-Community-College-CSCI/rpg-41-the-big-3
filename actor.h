@@ -8,14 +8,16 @@ class Actor : public HasInitiative { // base class for all moving characters, in
 		double y; // y pos
 		int speed = 10;
 	public:
+		// For game.cc or the main game code or whatever, u gonna need to make a variable like HasInitiative h; and then lets say ur setting a hunters speed with the roll dice
+		// u'll say sum like hunter.roll_dice(); then you'll do sum like h.set_Ini(hunter,get_actorSpeed());
 		Actor() : HasInitiative() {}
 		// USE THIS NEXT LINE TO GET THE SPEED, NOT get_speed() !!!!!
-		virtual int get_actorSpeed() { return speed; } 
+		virtual int get_actorSpeed() { return speed; }
 		virtual void roll_dice() {
-			HasInitiative::roll_Ini();
+			//HasInitiative::roll_Ini();
 			srand(time(0));
 			speed += ((rand() % 20) + 1);
-		};
+		}
 		virtual double get_x() const { return x; }
 		virtual void set_x(double x2) { x = x2; }
 		virtual double get_y() const { return y; }
@@ -71,14 +73,14 @@ class Hero : public Actor {
 		}
 		virtual void set_damage(int newDamage) { damage = newDamage; } // for if a player picks up an item like a sword that increases their damage that they do per hit by some amount
 		/*void set_speed(int s) override {
-			HasInitiative::set_speed(s);
-			speed = s;
-		}*/
+		  HasInitiative::set_speed(s);
+		  speed = s;
+		  }*/
 };
 
 class Tank : public Hero {
 	//tanks are just a type of hero that start with more health and have a higher health capacity
-	//Pros: start with more health, have a higher health capacity, take .75 damage
+	//Pros: start with more health, have a higher health capacity, take half damage
 	//Cons: heal half as slow with normal heals
 	public:
 		Tank() : Hero() { 
@@ -92,7 +94,7 @@ class Tank : public Hero {
 			health += (newHealth / 2);
 			if (health > maxHealth) health = maxHealth;
 		}
-		void take_damage(int decr) override { health -= (decr * 3 / 4); }
+		void take_damage(int decr) override { health -= (decr / 2); }
 };
 
 class Hunter : public Hero {
@@ -154,33 +156,34 @@ class Wizard : public Hero {
 		Wizard() : Hero() {
 			health = 75;
 			maxHealth = 75;
+			shield = 25;
 			speed = 30;
-	}
+		}
 
-	void set_maxHealth() override {
-		if (health == maxHealth) shield = maxShield;
-		else health = maxHealth;
-	}
-	void set_maxShield() override {
-		if (shield == maxShield) health = maxHealth;
-		else shield = maxShield;
-	}
-	void increase_health(int newHealth) override {
-		health += newHealth;
-		if (health > maxHealth) {
-			shield += (health - maxHealth);
-			health = maxHealth;
-			if (shield > maxShield) shield = maxShield;
+		void set_maxHealth() override {
+			if (health == maxHealth) shield = maxShield;
+			else health = maxHealth;
 		}
-	}
-	void increase_shield(int newShield) override {
-		shield += newShield;
-		if (shield > maxShield) {
-			health += (shield - maxShield);
-			shield = maxShield;
-			if (health > maxHealth) health = maxHealth;
+		void set_maxShield() override {
+			if (shield == maxShield) health = maxHealth;
+			else shield = maxShield;
 		}
-	}
+		void increase_health(int newHealth) override {
+			health += newHealth;
+			if (health > maxHealth) {
+				shield += (health - maxHealth);
+				health = maxHealth;
+				if (shield > maxShield) shield = maxShield;
+			}
+		}
+		void increase_shield(int newShield) override {
+			shield += newShield;
+			if (shield > maxShield) {
+				health += (shield - maxShield);
+				shield = maxShield;
+				if (health > maxHealth) health = maxHealth;
+			}
+		}
 };
 
 class Monster : public Actor {
@@ -232,6 +235,7 @@ class Chimera : public Monster {
 		if (hit) {
 			health -= newDamage;
 			if (health < 0) health = 0;
+			hit = false;
 		}
 		else hit = true;
 	}
@@ -239,18 +243,19 @@ class Chimera : public Monster {
 
 class Hydra : public Monster {
 	// The final boss. ton of health and damage, also every other hit doesnt work like a chimera
-	bool hit = false;
+	bool hitt = false;
 	public: 
-		Hydra() : Monster() {
-			health = 300;
-			damage = 75;
-			speed = 25;
+	Hydra() : Monster() {
+		health = 300;
+		damage = 75;
+		speed = 25;
+	}
+	void take_damage(int newDamage) override {
+		if (hitt) {
+			health -= newDamage;
+			if (health < 0) health = 0;
+			hitt = false;
 		}
-		void take_damage(int newDamage) override {
-			if (hit) {
-				health -= newDamage;
-				if (health < 0) health = 0;
-			}
-			else hit = true;
-		}
+		else hitt = true;
+	}
 };
