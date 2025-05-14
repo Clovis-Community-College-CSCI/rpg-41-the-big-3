@@ -1,10 +1,20 @@
 #pragma once
+#include "Bridgineer.h"
+#include <ctime>
 
-class Actor { // base class for everything
+class Actor : public HasInitiative { // base class for all moving characters, inherits from HqsInitiative for us to be able to change a hero's speed which will also update in HasInitiative
 	protected:
 		double x; // x pos
 		double y; // y pos
+		int speed = 10;
 	public:
+		Actor() : HasInitiative() {}
+		virtual int get_actorSpeed() { return speed; }
+		virtual void roll_dice() {
+			HasInitiative::roll_Ini();
+			srand(time(0));
+			speed += ((rand() % 20) + 1);
+		};
 		virtual double get_x() const { return x; }
 		virtual void set_x(double x2) { x = x2; }
 		virtual double get_y() const { return y; }
@@ -59,6 +69,10 @@ class Hero : public Actor {
 			}
 		}
 		virtual void set_damage(int newDamage) { damage = newDamage; } // for if a player picks up an item like a sword that increases their damage that they do per hit by some amount
+		/*void set_speed(int s) override {
+			HasInitiative::set_speed(s);
+			speed = s;
+		}*/
 };
 
 class Tank : public Hero {
@@ -71,6 +85,7 @@ class Tank : public Hero {
 			shield = 50;
 			maxHealth = 150;
 			maxShield = 100;
+			speed = 10;
 		}
 		void increase_health(int newHealth) override {
 			health += (newHealth / 2);
@@ -87,6 +102,7 @@ class Hunter : public Hero {
 		Hunter() : Hero() {
 			damage = 15;
 			shield = 50;
+			speed = 25;
 		}
 		void set_damage(int newDamage) override { damage = (newDamage * 1.5); }
 		void take_damage(int decr) override {
@@ -114,6 +130,7 @@ class Healer : public Hero {
 		Healer() : Hero() {
 			maxHealth = 150;
 			maxShield = 100;
+			speed = 15;
 		}
 		void increase_health(int newHealth) override { 
 			health = (newHealth * 2);
@@ -136,6 +153,7 @@ class Wizard : public Hero {
 		Wizard() : Hero() {
 			health = 75;
 			maxHealth = 75;
+			speed = 30;
 	}
 
 	void set_maxHealth() override {
@@ -186,6 +204,7 @@ class Ogre : public Monster {
 	public:
 		Ogre() : Monster() {
 			health = 30;
+			speed = 5;
 		}
 };
 
@@ -195,6 +214,7 @@ class ColdKiller : public Monster {
 		ColdKiller() : Monster() {
 			damage = 50;
 			health = 25;
+			speed = 30;
 		}
 };
 
@@ -205,6 +225,7 @@ class Chimera : public Monster {
 	Chimera() : Monster() {
 		damage = 30;
 		health = 75;
+		speed = 15;
 	}
 	void take_damage(int newDamage) override {
 		if (hit) {
@@ -222,6 +243,7 @@ class Hydra : public Monster {
 		Hydra() : Monster() {
 			health = 300;
 			damage = 75;
+			speed = 25;
 		}
 		void take_damage(int newDamage) override {
 			if (hit) {
