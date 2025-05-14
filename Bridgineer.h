@@ -39,7 +39,7 @@ class HasInitiative {
         return initiative;
     }
 
-    static void roll_Ini() {
+    void roll_Ini() {
         srand(time(0));
         int rando = (rand() % 20) + 1;
         initiative = speed + rando;
