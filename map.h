@@ -1,20 +1,27 @@
-#pragma once
+#ifndef MAP_H
+#define MAP_H
+
 #include <vector>
 #include <utility>
 #include <ncurses.h>
 
-class GameMap{
-private:
-	std::vector<std::vector<char>> grid;
-	std::pair<int, int> playerPos;
-	const int width = 30;
-	const int height = 20;
+enum TileType {FLOOR, WALL };
 
+class Map{
 public: 
-	GameMap();
+	Map();
+	void movePlayer(int dy, int dx);
+	std::pair<int, int> getPlayerPos() const;
 	void draw(WINDOW* win) const;
 	void drawWorldMap(WINDOW* win, int currentY, int currentX) const;
-	bool movePlayer(int dy, int dx);
-	std::pair<int, int> getPlayerPos() const { return playerPos; }
+private:
+	static const int width = 99;
+	static const int height = 49;
+
+	int playerX, playerY;
+	int scrollX, scrollY;
+	std::vector<std::vector<int>> data;
+
 };
 
+#endif
