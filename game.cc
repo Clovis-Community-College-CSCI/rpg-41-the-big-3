@@ -71,7 +71,7 @@ void startGame(Hero* player, InventoryBST& inventory) {
 	nodelay(gameWin, TRUE);
 	
 	//Game Components 
-	GameMap gameMap;
+	Map gameMap;
 	bool mapVisible = false;
 
 	const char* tabs[] = {"Inventory", "Map", "Character"};
