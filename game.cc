@@ -70,14 +70,14 @@ void startCombat(Hero* player, Monster* monster, WINDOW* win) {
 					case 2:
 						mvwprintw(combatWin, 10, 2, "You fumble for your item...");
 						wrefresh(combatWin);
-						napms(1000);
+						napms(800);
 						delwin(combatWin);
 						break;
 					case 3:
-						if (rand() % 2 == 0) {
+						if (rand() % 5 == 0) {
 						mvwprintw(combatWin, 10, 2, "You escaped!");
 						wgetch(combatWin);
-						napms(1000);
+						napms(800);
 						werase(combatWin);
 						wrefresh(combatWin);
 						delwin(combatWin);
@@ -85,7 +85,7 @@ void startCombat(Hero* player, Monster* monster, WINDOW* win) {
 					} else {
 						mvwprintw(combatWin, 10, 2, "You failed to flee!");
 						wrefresh(combatWin);
-						napms(1000);
+						napms(800);
 					}
 					break;
 					}
@@ -98,7 +98,7 @@ void startCombat(Hero* player, Monster* monster, WINDOW* win) {
 			}
 		
 			wrefresh(combatWin);
-			napms(2000);
+			napms(1800);
 
 			if (player->get_health() <= 0 || monster->get_health() <= 0){
 				combatOver = true;
