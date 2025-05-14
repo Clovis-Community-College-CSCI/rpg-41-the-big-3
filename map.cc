@@ -106,6 +106,18 @@ void Map::draw(WINDOW* win, int playerX, int playerY) const {
 			}
 		}
 	}
+	wattron(win, COLOR_PAIR(5));
+	for (const Monster* m : monsters) {
+		if (m->get_health() > 0) {
+			int screenX = m->get_x() - cameraX;
+			int screenY = m->get_y() - cameraY;
+			if (screenX >= 0 && screenX < winWidth &&
+				screenY >= 0 && screenY < winHeight) {
+				mvwaddch(win, screenY, screenX, 'M');
+			}
+		}
+	}
+	wattroff(win, COLOR_PAIR(5));	
 }
 
 void Map::drawWorldMap(WINDOW* win, int currentY, int currentX) const {
