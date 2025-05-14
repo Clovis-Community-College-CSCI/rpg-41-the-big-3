@@ -9,7 +9,7 @@ main.o: main.cc menu.h game.h
 game.o: game.cc game.h map.h actor.h inventory.h
 	g++ -g -fsanitize=address -c game.cc
 
-map.o: map.cc map.h
+map.o: map.cc map.h actor.h
 	g++ -g -fsanitize=address -c map.cc
 
 clean:

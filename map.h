@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <ncurses.h>
+#include "actor.h"
 
 enum TileType {FLOOR, WALL };
 
@@ -15,6 +16,8 @@ public:
 	void draw(WINDOW* win, int playerX, int playerY) const;
 	void drawWorldMap(WINDOW* win, int currentY, int currentX) const;
 	void generateDungeon(int maxRooms);
+	const std::vector<Monster*>& getMonsters() const {return monsters;}
+	void spawnMonsters(int count);
 private:
 	struct Room {
 		int x, y;
@@ -32,7 +35,7 @@ private:
 	
 	int playerX, playerY;
 	std::vector<std::vector<int>> data;
-
+	std::vector<Monster*> monsters;
 };
 
 #endif

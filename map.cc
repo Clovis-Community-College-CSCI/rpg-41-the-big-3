@@ -20,6 +20,7 @@ Map::Map() {
 	}
 
 	generateDungeon(15);
+	spawnMonsters(20);
 
 	if (data[playerY][playerX] == WALL) {
 		for (int y = 1; y < WORLD_HEIGHT - 1; y++) {
@@ -217,5 +218,28 @@ void Map::generateDungeon(int maxRooms) {
 	if (!rooms.empty()) {
 		playerX = rooms[0].x + rooms[0].width /2;
 		playerY = rooms[0].y + rooms[0].height /2;
+	}
+}
+
+void Map::spawnMonsters(int count) {
+	monsters.clear();
+	for (int i = 0; i < count; i++) {
+		int x, y;
+		do {
+			x = 1 + rand() % (WORLD_WIDTH - 2);
+			y = 1 + rand() % (WORLD_HEIGHT - 2);
+		} while (data[y][x] != FLOOR);
+
+		Monster* m;
+		int type = rand() % 4;
+		switch (type) {
+			case 0: m = new Ogre(); break;
+			case 1: m = new ColdKiller(); break;
+			case 2: m = new Chimera(); break;
+			default: m = new Hydra(); break;
+		}
+		m->set_x(x);
+		m->set_y(y);
+		monsters.push_back(m);
 	}
 }

@@ -17,6 +17,92 @@ void printInventory(WINDOW* win, BSTNode* node, int& row) {
 	printInventory(win, node->right, row);
 }
 
+bool compareInitiative(HasInitiative* a, HasInitiative* b) {
+	return a->get_Ini() > b->get_Ini();
+}
+
+void startCombat(Hero* player, Monster* monster, WINDOW* win) {
+	werase(win);
+	wattron(win, COLOR_PAIR(5));
+	box(win, 0, 0);
+	wattroff(win, COLOR_PAIR(5));
+
+	mvwprintw(win, 1, 2, "Battle! %s (HP: %d) vs %s (HP: %d)", 
+					player->get_name().c_str(), player->get_health(),
+					monster->get_name().c_str(), monster->get_health());
+
+	std::vector<HasInitiative*> combatants = {player, monster};
+	for (auto c : combatants) c->roll_dice();
+
+	std::sort(combatants.begin(), combatants.end(), [](HasInitiative* a, HasInitiative* b) {
+			return a->get_Ini() > b->get_Ini();
+	});
+
+	bool combatOver = false;
+	while (!combatOver) {
+		for (auto actor : combatants) {
+			if (actor->get_health() <= 0) continue;
+
+			werase(win);
+			box(win, 0, 0);
+			mvwprintw(win, 1, 2, "%s's turn (Initiative: %d)",
+					actor == player ? "You" : monster->get_name().c_str(),
+					actor->get_Ini());
+
+			if (actor == player) {
+				mvwprintw(win, 5, 2, "1. Attack | 2. Item | 3. Flee");
+				wrefresh(win);
+
+				int choice = wgetch(win) - '0';
+				switch (choice) {
+					case 1:
+						monster->take_damage(player->get_damage());
+						break;
+					case 2:
+						mvwprintw(win, 10, 2, "You fumble for your item...");
+						wgetch(win);
+						break;
+					case 3:
+						if (rand() % 2 == 0) {
+						mvwprintw(win, 10, 2, "You escaped!");
+						wgetch(win);
+						return;
+					} else {
+						mvwprintw(win, 5, 2, "You failed to flee!");
+					}
+					break;
+				}
+			}
+
+			else {
+				player->take_damage(monster->get_damage());
+				mvwprintw(win, 5, 2, "%s attacks for %d damage!",
+					monster->get_name().c_str(), monster->get_damage());
+			}
+		
+			wrefresh(win);
+			napms(1000);
+
+			if (player->get_health() <= 0 || monster->get_health() <= 0){
+				combatOver = true;
+				break;
+			}
+		}
+	}
+
+	werase(win);
+	box(win, 0, 0);
+	if (player->get_health() <= 0) {
+		mvwprintw(win, 1, 2, "YOU DIED.");
+	} else {
+		mvwprintw(win, 12, 2, "Victory! %s is defeated!", monster->get_name().c_str());
+	}
+	wgetch(win);
+}
+
+
+	
+
 void startGame(Hero* player, InventoryBST& inventory) {
 	//initialize
 	initscr();
@@ -38,6 +124,7 @@ void startGame(Hero* player, InventoryBST& inventory) {
 	init_pair(2, COLOR_YELLOW, COLOR_BLACK);
 	init_pair(3, COLOR_GREEN, -1);
 	init_pair(4, COLOR_CYAN, -1);
+	init_pair(5, COLOR_RED, -1);
 
 	int height, width;
 	getmaxyx(stdscr, height, width);
@@ -109,6 +196,12 @@ void startGame(Hero* player, InventoryBST& inventory) {
 			int playerX = pos.first;
 			int playerY = pos.second;
 			
+			for (Monster* m : gameMap.getMonsters()) {
+				if (m->get_x() == playerX && m->get_y() == playerY && m->get_health() > 0) {
+					startCombat(player, m, gameWin);
+					break;
+				}
+			}
 			gameMap.draw(gameWin, playerX, playerY);
 		}
 		else {
