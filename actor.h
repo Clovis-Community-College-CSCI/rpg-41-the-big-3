@@ -132,9 +132,10 @@ class Wizard : public Hero {
 	// also if he uses a set max health heal with max health it will go to his shield instead and vice versa
 	// Pros: Special Healing
 	// Cons: start with less health and max health
-	Wizard() : Hero() {
-		health = 75;
-		maxHealth = 75;
+	public:
+		Wizard() : Hero() {
+			health = 75;
+			maxHealth = 75;
 	}
 
 	void set_maxHealth() override {

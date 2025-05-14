@@ -8,7 +8,7 @@
 
 void printInventory(WINDOW* win, BSTNode* node, int& row) {
 	if (!node) return;
-
+	
 	printInventory(win, node->left, row);
 	wattron(win, COLOR_PAIR(2));
 	mvwprintw(win, row++, 4, "%s (x%d)", node->item->name.c_str(), node->item->quantity);

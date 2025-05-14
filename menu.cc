@@ -131,12 +131,16 @@ Hero* showMenu(InventoryBST& inventory) {
 
     delwin(menu);
     endwin();
-	inventory.addItem("Health Potion", 3, 50, 20);
-	inventory.addItem("Mana Elixer", 2, 70, 15);
 
-	if (classChoice == 0) return new Tank();
-	if (classChoice == 1) return new Hunter();
-	if (classChoice == 2) return new Wizard();
-	return new Healer();
+	inventory.addItem("Health Potion", 3, 50, 20);
+	inventory.addItem("Mana Elixir", 2, 70, 15);
+	
+	switch(classChoice) {
+		case 0: return new Tank();
+		case 1: return new Hunter();
+		case 2: return new Wizard();
+		default: return new Healer();
+	}
 }
+
 

@@ -11,11 +11,10 @@ int main() {
 	InventoryBST inventory;
 	Hero* player = showMenu(inventory);
 
-	if (player = nullptr) return 0;
+	if (player == nullptr) return 0;
 
 	startGame(player, inventory);
 	
 
-	delete player;
 	return 0;
 }
