@@ -16,11 +16,11 @@ class HasInitiative {
     int speed;
     int initiative;
 
-  int get_speed() const{
+   int get_speed() const{
   return speed;
   }
   
-    void set_speed(int newSpeed) {
+     void set_speed(int newSpeed) {
         if (newSpeed >= 1 && newSpeed <= 40) {
             speed = newSpeed;
         } else {
@@ -39,7 +39,7 @@ class HasInitiative {
         return initiative;
     }
 
-    void roll_Ini() {
+     void roll_Ini() {
         srand(time(0));
         int rando = (rand() % 20) + 1;
         initiative = speed + rando;
@@ -50,6 +50,10 @@ class HasInitiative {
         set_speed(s);
         roll_Ini();
     }
+
+HasInitiative(){
+
+}
 
 };
 int dice_test() {
@@ -92,8 +96,9 @@ int main() {
     }
         );
 
+  int sizee = storage.size();
 
-    for (int i = 0; i < storage.size(); i++) {
+    for (int i = 0; i < sizee; i++) {
         storage[i]->setNext(storage[(i + 1) % storage.size()]);
         storage[i]->setPrev(storage[(((i - 1) + storage.size()) % storage.size())]);
     }
