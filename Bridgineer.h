@@ -63,7 +63,7 @@ int dice_test() {
     return rando;
 }
 
-
+/*
 int main() {
 
     // create Bridges object
@@ -113,3 +113,4 @@ int main() {
 
     return 0;
 }
+*/
