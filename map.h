@@ -15,8 +15,8 @@ public:
 	void draw(WINDOW* win) const;
 	void drawWorldMap(WINDOW* win, int currentY, int currentX) const;
 private:
-	static const int width = 99;
-	static const int height = 49;
+	static const int width = 147;
+	static const int height = 47;
 
 	int playerX, playerY;
 	int scrollX, scrollY;

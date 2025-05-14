@@ -61,12 +61,14 @@ HasInitiative(){
 }
 
 };
+/*
 int dice_test() {
     srand(time(0));
     int rando = (rand() % 20) + 1;
     cout << rando << endl;
     return rando;
 }
+*/
 
 //=================+Bridges Stuff+=====================
 /*

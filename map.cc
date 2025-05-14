@@ -4,16 +4,20 @@
 #include <vector>
 #include <iostream>
 
-Map::Map() : playerX(width/2), playerY(height/2), scrollX(0), scrollY(0) {
+Map::Map() {
+	playerX = width/2;
+	playerY = height/2;
+	scrollX = 0;
+	scrollY = 0; 
+
 	data.resize(height, std::vector<int>(width, FLOOR));
 
 	for (int y = 0; y < height; y++) {
-		data[y][0] = WALL;
-		data[y][width - 1] = WALL;
-	}
-	for (int x = 0; x < width; x++) {
-		data[0][x] = '#';
-		data[height - 1][x] = '#';
+		for (int x = 0; x < width; x++) {
+			if (y == 0 || x == 0 || y == height - 1 || x == width - 1) {
+				data[y][x] = WALL;
+				}
+			}
 	}
 }
 
@@ -50,7 +54,11 @@ void Map::draw(WINDOW* win) const {
 		for (int x = 0; x < winWidth; x++) {
 			int mapY = offsetY + y;
 			int mapX = offsetX + x;
-			
+		
+			if (mapY < 0 || mapY >= height || mapX < 0 || mapX >= width) {
+				continue;
+			}
+
 			char symbol;
 			int color;
 					
