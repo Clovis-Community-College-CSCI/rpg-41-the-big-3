@@ -60,6 +60,10 @@ I am going to work on part A
 
 *Wei:*
 Part B, Bridges
+Example:
+![image](https://github.com/user-attachments/assets/1518d43a-9341-43b8-ae84-6d9ed67b115f)
+
+
 
 Person C - "JJK Curse Lord" : *Khai Dizon*
 
