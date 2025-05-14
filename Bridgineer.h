@@ -10,13 +10,17 @@
 
 using namespace bridges;
 using namespace std;
-
 class HasInitiative {
   public:
+    string name;
     int speed;
     int initiative;
 
-    void set_speed(int newSpeed) {
+   int get_speed() const{
+  return speed;
+  }
+  
+     void set_speed(int newSpeed) {
         if (newSpeed >= 1 && newSpeed <= 40) {
             speed = newSpeed;
         } else {
@@ -24,29 +28,34 @@ class HasInitiative {
             exit(1);
         }
     }
+    void set_name(string here) {
+        name = here;
+    }
+
     void print_Ini() const {
         cout << speed << "\n";
     }
+    int get_Ini() const {
+        return initiative;
+    }
 
-
-    int dice() {
+     void roll_Ini() {
         srand(time(0));
         int rando = (rand() % 20) + 1;
-        cout << rando << endl;
-        return rando;
+        initiative = speed + rando;
     }
 
-    void roll_4() {
-        initiative = speed + dice();
-    }
-
-    HasInitiative(int s) {
+    HasInitiative(string x, int s) {
+        set_name(x);
         set_speed(s);
-
+        roll_Ini();
     }
+
+HasInitiative(){
+
+}
 
 };
-
 int dice_test() {
     srand(time(0));
     int rando = (rand() % 20) + 1;
@@ -54,7 +63,7 @@ int dice_test() {
     return rando;
 }
 
-
+/*
 int main() {
 
     // create Bridges object
@@ -62,21 +71,37 @@ int main() {
                     "1362253532750");
 
     //----------------------------------WALL------------------------------------------
-    CircDLelement<string> *turn = nullptr;
-    vector<CircDLelement<string>*> storage;
+    CircDLelement<int> *turn = nullptr;
+    vector<CircDLelement<int>*> storage;
     while (true) {
+
         string input = read("Enter Name: ");
-        if (input == "SNAPSHOT") break;
-        CircDLelement<string> *entity = new CircDLelement<string>(to_string(dice_test()), input);
-        storage.push_back(entity);
+        if (input == "EXIT") break;
+
+        int input2 = read("Enter Speed (between 1-40): ");
+        if (input2 < 0) break;
+
+        HasInitiative *entity = new HasInitiative(input, input2);
+
+        string label = input + " - Initiative: " + to_string(entity->initiative);
+        storage.push_back(new CircDLelement<int>((entity->initiative), label));
+
+        delete entity;
 
     }
 
-    for (int i = 0; i < storage.size(); i++) {
+//Sort by Initiative
+    sort(storage.begin(), storage.end(), [](CircDLelement<int>* a, CircDLelement<int>* b) {
+        return (a->getValue() > b->getValue());
+    }
+        );
+
+  int sizee = storage.size();
+
+    for (int i = 0; i < sizee; i++) {
         storage[i]->setNext(storage[(i + 1) % storage.size()]);
         storage[i]->setPrev(storage[(((i - 1) + storage.size()) % storage.size())]);
     }
-
 
     turn = storage[0];
 
@@ -88,3 +113,4 @@ int main() {
 
     return 0;
 }
+*/

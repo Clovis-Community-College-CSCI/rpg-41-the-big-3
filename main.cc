@@ -2,19 +2,20 @@
 #include "game.h"
 #include "actor.h"
 #include "inventory.h"
-#include <ncurses.h>
-#include <string>
-
-using namespace std;
+#include <iostream>
 
 int main() {
-	InventoryBST inventory;
-	Hero* player = showMenu(inventory);
+    // Create the main inventory BST
+    InventoryBST inventory;
 
-	if (player != nullptr) {
-		startGame(player, inventory);
-		delete player;
+    // Show the menu and let the player pick a hero class, populating inventory with starter items
+    Hero* player = showMenu(inventory);
+
+	  if (player != nullptr) {
+		  startGame(player, inventory);
+		  delete player;
 	}
-
-	return 0;
+    // Game over
+    std::cout << "Thanks for playing!\n";
+    return 0;
 }
