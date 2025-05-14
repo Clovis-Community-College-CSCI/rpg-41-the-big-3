@@ -35,6 +35,12 @@ Map::Map() {
 	}
 }
 
+Map::~Map() {
+	for (Monster* m : monsters) {
+		delete m;
+	}
+	monsters.clear();
+}
 void Map::movePlayer(int dy, int dx) {
 	int newX = playerX +dx;
 	int newY = playerY +dy;

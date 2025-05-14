@@ -2,23 +2,18 @@
 #include "actor.h"
 #include "inventory.h"
 #include "map.h"
-//#include "Bridgineer.h"
 #include <ncurses.h>
 #include <unistd.h>
 #include <cstring>
+#include <algorithm>
 
 void printInventory(WINDOW* win, BSTNode* node, int& row) {
 	if (!node) return;
-	
 	printInventory(win, node->left, row);
 	wattron(win, COLOR_PAIR(2));
 	mvwprintw(win, row++, 4, "%s (x%d)", node->item->name.c_str(), node->item->quantity);
 	wattroff(win, COLOR_PAIR(2));
 	printInventory(win, node->right, row);
-}
-
-bool compareInitiative(HasInitiative* a, HasInitiative* b) {
-	return a->get_Ini() > b->get_Ini();
 }
 
 void startCombat(Hero* player, Monster* monster, WINDOW* win) {
@@ -31,8 +26,9 @@ void startCombat(Hero* player, Monster* monster, WINDOW* win) {
 					player->get_name().c_str(), player->get_health(),
 					monster->get_name().c_str(), monster->get_health());
 
-	std::vector<HasInitiative*> combatants = {player, monster};
-	for (auto c : combatants) c->roll_dice();
+	std::vector<Actor*> combatants = {player, monster};
+	
+	for (auto c : combatants) c->roll_Ini();
 
 	std::sort(combatants.begin(), combatants.end(), [](HasInitiative* a, HasInitiative* b) {
 			return a->get_Ini() > b->get_Ini();

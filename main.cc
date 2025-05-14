@@ -11,7 +11,7 @@ int main() {
     // Show the menu and let the player pick a hero class, populating inventory with starter items
     Hero* player = showMenu(inventory);
 
-	  if (player != nullptr) {
+	  if (player) {
 		  startGame(player, inventory);
 		  delete player;
 	}

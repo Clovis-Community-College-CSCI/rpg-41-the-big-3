@@ -18,6 +18,7 @@ public:
 	void generateDungeon(int maxRooms);
 	const std::vector<Monster*>& getMonsters() const {return monsters;}
 	void spawnMonsters(int count);
+	~Map();
 private:
 	struct Room {
 		int x, y;

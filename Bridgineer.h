@@ -7,59 +7,29 @@
 #include <cstdlib>
 #include <ctime>
 
-
-using namespace bridges;
-using namespace std;
 class HasInitiative {
-  public:
-    string name;
+protected:
+	std::string name;
     int speed;
     int initiative;
 
-   int get_speed() const{
-  return speed;
-  }
+public:
+	HasInitiative(const std::string& name, int speed) : name(name), speed(speed) {
+		roll_Ini();
+	}
+	
+	void roll_Ini() {
+		initiative = speed + (rand()% 20 + 1);
+	}
   
-     void set_speed(int newSpeed) {
-        if (newSpeed >= 1 && newSpeed <= 40) {
-            speed = newSpeed;
-        } else {
-            cout << "ERROR!\n";
-            exit(1);
-        }
-    }
-    void set_name(string here) {
-        name = here;
-    }
+	int get_speed()const { return speed;}
+	int get_Ini() const { return initiative;}
+	std::string get_name() const {return name;}
 
-    void print_Ini() const {
-        cout << speed << "\n";
-    }
-    int get_Ini() const {
-        return initiative;
-    }
-
-    void set_Ini(int i) {
-        initiative = i;
-    }
-
-
-     void roll_Ini() {
-        srand(time(0));
-        int rando = (rand() % 20) + 1;
-        initiative = speed + rando;
-    }
-
-    HasInitiative(string x, int s) {
-        set_name(x);
-        set_speed(s);
-        roll_Ini();
-    }
-
-HasInitiative(){
-
-}
-
+    void set_speed(int newSpeed) {
+        speed = newSpeed;
+    	roll_Ini();
+	}
 };
 /*
 int dice_test() {
