@@ -1,7 +1,7 @@
-#ifndef GAME_H
-#define GAME_H
 #pragma once
+#include "actor.h"
+#include "inventory.h"
 
-void startGame();
 
-#endif
+void startGame(Hero* player, InventoryBST& inventory);
+

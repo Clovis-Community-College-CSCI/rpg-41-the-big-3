@@ -1,16 +1,20 @@
 #include "menu.h"
 #include "game.h"
 #include "actor.h"
-#include <iostream>
+#include "inventory.h"
+#include <ncurses.h>
+#include <string>
 
 using namespace std;
 
 int main() {
+	InventoryBST inventory;
+	Hero* player = showMenu(inventory);
 
-	int choice = showMenu();
+	if (player == nullptr) return 0;
 
-	if (choice == 0) {
-		startGame();
-	}
+	startGame(player, inventory);
+	
+
 	return 0;
 }

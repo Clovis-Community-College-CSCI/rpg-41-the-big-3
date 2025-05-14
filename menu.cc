@@ -2,7 +2,7 @@
 #include <ncurses.h>
 #include <string>
 
-int showMenu() {
+Hero* showMenu(InventoryBST& inventory) {
     initscr();
     cbreak();
     noecho();
@@ -14,7 +14,7 @@ int showMenu() {
     if (!has_colors()) {
         endwin();
         printf("Your terminal does not support color\n");
-        return 1;
+        return nullptr;
     }
 
     start_color();
@@ -39,10 +39,6 @@ int showMenu() {
     const char* options[2] = {"Play", "Quit"};
     int choice = 0;
     int num_options = 2;
-
-    int frame = 0;
-    int colorCycle[] = {COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, COLOR_BLUE, COLOR_MAGENTA};
-    int numColors = sizeof(colorCycle) / sizeof(colorCycle[0]);
 
     bool running = true;
 
@@ -71,9 +67,9 @@ int showMenu() {
         }
 
         wrefresh(menu);
-
-        int input = wgetch(menu);
-        //mvprintw(height - 1, 0, "KEY INPUT: %d", input); //debug
+		int input = wgetch(menu);
+        
+		//mvprintw(height - 1, 0, "KEY INPUT: %d", input); //debug
         //refresh();
         if (input != ERR) {
         switch (input) {
@@ -91,8 +87,60 @@ int showMenu() {
 
     }
 
+	const char* classes[] = {"Tank", "Hunter", "Wizard", "Healer"};
+	int classChoice = 0;
+	int classCount = 4;
+	bool choosing = true;
+	
+	while (choosing) {
+		werase(menu);
+        wattron(menu, COLOR_PAIR(3));
+        wborder(menu, '|','|','-','-','+','+','+','+');
+        wattroff(menu, COLOR_PAIR(3));
+		
+		mvwprintw(menu, 8, (win_width - 20) / 2, "Choose Your Class:");
+
+		for (int i = 0; i < classCount; i++) {
+			if (i == classChoice) wattron(menu, COLOR_PAIR(1));
+			else wattron(menu, COLOR_PAIR(2));
+			
+			int text_x = (win_width - std::string(classes[i]).length()) /2;
+			int text_y = 12 + i * 2;
+			mvwprintw(menu, text_y, text_x, "%s", classes[i]);
+
+			wattroff(menu, COLOR_PAIR(1));
+			wattroff(menu, COLOR_PAIR(2));
+		}
+	wrefresh(menu);
+	int input = wgetch(menu);
+
+    if (input != ERR) {
+    	switch (input) {
+            case KEY_UP:
+                classChoice = (classChoice - 1 + classCount) % classCount;
+                break;
+            case KEY_DOWN:
+                classChoice = (classChoice + 1) % classCount;
+                break;
+            case 10:
+                choosing = false;
+                break;
+            }
+        }
+    }
+
     delwin(menu);
     endwin();
-	return choice;
+
+	inventory.addItem("Health Potion", 3, 50, 20);
+	inventory.addItem("Mana Elixir", 2, 70, 15);
+	
+	switch(classChoice) {
+		case 0: return new Tank();
+		case 1: return new Hunter();
+		case 2: return new Wizard();
+		default: return new Healer();
+	}
 }
+
 

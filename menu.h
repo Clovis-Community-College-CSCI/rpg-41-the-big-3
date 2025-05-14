@@ -1,6 +1,8 @@
 #ifndef MENU_H
 #define MENU_H
+#include "actor.h"
+#include "inventory.h"
 
-int showMenu();
+Hero* showMenu(InventoryBST& inventory);
 
 #endif
