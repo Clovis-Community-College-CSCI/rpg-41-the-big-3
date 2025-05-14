@@ -17,67 +17,86 @@ void printInventory(WINDOW* win, BSTNode* node, int& row) {
 }
 
 void startCombat(Hero* player, Monster* monster, WINDOW* win) {
-	werase(win);
-	wattron(win, COLOR_PAIR(5));
-	box(win, 0, 0);
-	wattroff(win, COLOR_PAIR(5));
+	int combat_height = 15;
+	int combat_width = 60;
+	int starty = (getmaxy(win) - combat_height) / 2;
+	int startx = (getmaxx(win) - combat_width) / 2;
 
-	mvwprintw(win, 1, 2, "Battle! %s (HP: %d) vs %s (HP: %d)", 
-					player->get_name().c_str(), player->get_health(),
-					monster->get_name().c_str(), monster->get_health());
+	WINDOW* combatWin = derwin(win, combat_height, combat_width, starty, startx);
+	wattron(combatWin, COLOR_PAIR(5));
+	box(combatWin, 0, 0);
+	wattroff(combatWin, COLOR_PAIR(5));
+
+	mvwprintw(combatWin, 1, 2, "BATTLE! %s vs %s", 
+					player->get_name().c_str(),
+					monster->get_name().c_str());
+	wrefresh(combatWin);
 
 	std::vector<Actor*> combatants = {player, monster};
-	
 	for (auto c : combatants) c->roll_Ini();
-
-	std::sort(combatants.begin(), combatants.end(), [](HasInitiative* a, HasInitiative* b) {
-			return a->get_Ini() > b->get_Ini();
-	});
+	std::sort(combatants.begin(), combatants.end(), 
+			[](Actor* a, Actor* b) {
+			return a->get_Ini() > b->get_Ini(); });
 
 	bool combatOver = false;
-	while (!combatOver) {
+	while (!combatOver && player->get_health() > 0) {
 		for (auto actor : combatants) {
 			if (actor->get_health() <= 0) continue;
 
-			werase(win);
-			box(win, 0, 0);
-			mvwprintw(win, 1, 2, "%s's turn (Initiative: %d)",
-					actor == player ? "You" : monster->get_name().c_str(),
-					actor->get_Ini());
+			werase(combatWin);
+			box(combatWin, 0, 0);
+
+			mvwprintw(combatWin, 1, 2, "%s: HP %d | %s: HP %d",
+					player->get_name().c_str(), player->get_health(),
+					monster->get_name().c_str(), monster->get_health());
+
+			mvwprintw(combatWin, 3, 2, "%s's turn:",
+					actor == player ? "Hero" : monster->get_name().c_str());
 
 			if (actor == player) {
-				mvwprintw(win, 5, 2, "1. Attack | 2. Item | 3. Flee");
-				wrefresh(win);
 
+				mvwprintw(combatWin, 5, 4, "1. Attack | 2. Item | 3. Flee");
+				wrefresh(combatWin);
+			bool valid_choice = false;
+			while (!valid_choice) {
 				int choice = wgetch(win) - '0';
 				switch (choice) {
 					case 1:
 						monster->take_damage(player->get_damage());
+						mvwprintw(combatWin, 10, 2, "You deal %d damage!",
+								player->get_damage());
+						valid_choice = true;
 						break;
 					case 2:
-						mvwprintw(win, 10, 2, "You fumble for your item...");
-						wgetch(win);
+						mvwprintw(combatWin, 10, 2, "You fumble for your item...");
+						wrefresh(combatWin);
+						napms(1000);
+						delwin(combatWin);
 						break;
 					case 3:
 						if (rand() % 2 == 0) {
-						mvwprintw(win, 10, 2, "You escaped!");
-						wgetch(win);
+						mvwprintw(combatWin, 10, 2, "You escaped!");
+						wgetch(combatWin);
+						napms(1000);
+						delwin(combatWin);
 						return;
 					} else {
-						mvwprintw(win, 5, 2, "You failed to flee!");
+						mvwprintw(combatWin, 10, 2, "You failed to flee!");
+						wrefresh(combatWin);
+						napms(1000);
 					}
 					break;
+					}
 				}
-			}
 
-			else {
+			} else {
 				player->take_damage(monster->get_damage());
-				mvwprintw(win, 5, 2, "%s attacks for %d damage!",
+				mvwprintw(combatWin, 5, 2, "%s attacks for %d damage!",
 					monster->get_name().c_str(), monster->get_damage());
 			}
 		
-			wrefresh(win);
-			napms(1000);
+			wrefresh(combatWin);
+			napms(2000);
 
 			if (player->get_health() <= 0 || monster->get_health() <= 0){
 				combatOver = true;
@@ -86,14 +105,27 @@ void startCombat(Hero* player, Monster* monster, WINDOW* win) {
 		}
 	}
 
-	werase(win);
-	box(win, 0, 0);
+	werase(combatWin);
+	box(combatWin, 0, 0);
 	if (player->get_health() <= 0) {
-		mvwprintw(win, 1, 2, "YOU DIED.");
+		mvwprintw(combatWin, 2, 2, "YOU DIED.");
+		mvwprintw(combatWin, 4, 2, "Press 'q' to quit...");
+		wrefresh(combatWin);
+		int ch;
+		while (ch = wgetch(combatWin)) {
+				if (ch == 'q' || ch == 'Q') {
+				delwin(combatWin);
+				endwin();
+				exit(0);
+			}
+		}
 	} else {
-		mvwprintw(win, 12, 2, "Victory! %s is defeated!", monster->get_name().c_str());
-	}
-	wgetch(win);
+		mvwprintw(combatWin, 2, 2, "Victory! %s is defeated!", monster->get_name().c_str());
+		mvwprintw(combatWin, 4, 2, "Press any key to continue...");
+		wrefresh(combatWin);
+		wgetch(combatWin);
+		}
+	delwin(combatWin);
 }
 
 
@@ -195,6 +227,7 @@ void startGame(Hero* player, InventoryBST& inventory) {
 			for (Monster* m : gameMap.getMonsters()) {
 				if (m->get_x() == playerX && m->get_y() == playerY && m->get_health() > 0) {
 					startCombat(player, m, gameWin);
+					gameMap.draw(gameWin, playerX, playerY);
 					break;
 				}
 			}
