@@ -34,8 +34,25 @@ void Map::movePlayer(int dy, int dx) {
 std::pair<int, int> Map::getPlayerPos() const {
 	return {playerX, playerY};
 }
+/*
+void Map::draw(WINDOW* win, int playerX, int playerY) const {
+	int winHeight, winWidth;
+	getmaxyx(win, winHeight, winWidth)
 
-void Map::draw(WINDOW* win) const {
+	int startX = std::max(0, playerX - winWidth /2);
+	int startY = std::max(0, playerY - winHeight /2);
+
+	int endX = std::min(mapWidth - 1, startX + winWidth);
+	int endY = std::min(mapHeight -1, startY + winHeight);
+
+	for (int y = startY; y < endY; y++) {
+		for (int x = startX; x < endX; x++) {
+			mvaddch(win, y - startY, x - startX, map[y][x]);
+		}
+	}
+}
+*/
+void Map::draw(WINDOW* win, int playerX, int playerY) const {
 	int winHeight, winWidth;
 	getmaxyx(win, winHeight, winWidth);
 

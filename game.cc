@@ -80,7 +80,7 @@ void startGame(Hero* player, InventoryBST& inventory) {
 	
 	enum GameMode { MAIN_GAME, TAB_MENU };
 	GameMode currentMode = MAIN_GAME;
-	
+
 	bool running = true;
 	while (running) {
 		werase(gameWin);
@@ -104,13 +104,11 @@ void startGame(Hero* player, InventoryBST& inventory) {
 
 		//Game View
 		if (currentMode == MAIN_GAME) {
-			if (mapVisible) {
-				auto pos = gameMap.getPlayerPos();
-				gameMap.drawWorldMap(gameWin, pos.second, pos.first);
-				mvwprintw(gameWin, 2, 4, "World Map (Press 'm' to exit)");
-			} else {
-				gameMap.draw(gameWin);
-			}
+			auto pos = gameMap.getPlayerPos();
+			int playerX = pos.first;
+			int playerY = pos.second;
+			
+			gameMap.draw(gameWin, playerX, playerY);
 		}
 		else {
 		//Tab Menu	
@@ -154,7 +152,7 @@ void startGame(Hero* player, InventoryBST& inventory) {
 		move(LINES - 1, 0);
 		clrtoeol();
 		if (currentMode == MAIN_GAME){
-			mvprintw(LINES -1, 2, "Move: Arrow Keys | Menu: ESC | Map: m | Quit: q");
+			mvprintw(LINES -1, 2, "Move: Arrow Keys | Menu: ESC | Quit: q");
 		} else {
 			mvprintw(LINES - 1, 2, "Navigate: LEFT/RIGHT | Close Menu: ESC | Quit: q");
 		}

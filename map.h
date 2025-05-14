@@ -12,11 +12,11 @@ public:
 	Map();
 	void movePlayer(int dy, int dx);
 	std::pair<int, int> getPlayerPos() const;
-	void draw(WINDOW* win) const;
+	void draw(WINDOW* win, int playerX, int playerY) const;
 	void drawWorldMap(WINDOW* win, int currentY, int currentX) const;
 private:
-	static const int width = 147;
-	static const int height = 47;
+	static const int width = 150;
+	static const int height = 50;
 
 	int playerX, playerY;
 	int scrollX, scrollY;
