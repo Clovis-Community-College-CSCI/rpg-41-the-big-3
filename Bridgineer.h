@@ -10,7 +10,7 @@
 
 using namespace bridges;
 using namespace std;
-Class HasInitiative {
+class HasInitiative {
   public:
     string name;
     int speed;
