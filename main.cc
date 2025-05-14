@@ -2,19 +2,25 @@
 #include "game.h"
 #include "actor.h"
 #include "inventory.h"
-#include <ncurses.h>
-#include <string>
-
-using namespace std;
+#include <iostream>
 
 int main() {
-	InventoryBST inventory;
-	Hero* player = showMenu(inventory);
+    // Create the main inventory BST
+    InventoryBST inventory;
 
-	if (player == nullptr) return 0;
+    // Show the menu and let the player pick a hero class, populating inventory with starter items
+    Hero* player = showMenu(inventory);
 
-	startGame(player, inventory);
-	
+    // If player chose to quit, exit
+    if (player == nullptr) {
+        std::cout << "Goodbye!\n";
+        return 0;
+    }
 
-	return 0;
+    // Start the main game loop (ncurses UI, map, combat, inventory, etc.)
+    startGame(player, inventory);
+
+    // Game over
+    std::cout << "Thanks for playing!\n";
+    return 0;
 }
