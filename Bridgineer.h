@@ -10,12 +10,16 @@
 
 using namespace bridges;
 using namespace std;
-lass HasInitiative {
+Class HasInitiative {
   public:
     string name;
     int speed;
     int initiative;
 
+  int get_speed() const{
+  return speed;
+  }
+  
     void set_speed(int newSpeed) {
         if (newSpeed >= 1 && newSpeed <= 40) {
             speed = newSpeed;
