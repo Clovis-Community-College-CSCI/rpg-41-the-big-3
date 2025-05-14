@@ -20,7 +20,7 @@ class HasInitiative {
   return speed;
   }
   
-    static void set_speed(int newSpeed) {
+    void set_speed(int newSpeed) {
         if (newSpeed >= 1 && newSpeed <= 40) {
             speed = newSpeed;
         } else {
@@ -78,7 +78,9 @@ int main() {
         if (input2 < 0) break;
 
         HasInitiative *entity = new HasInitiative(input, input2);
-        storage.push_back(new CircDLelement<int>((entity->initiative), input));
+
+        string label = input + " - Initiative: " + to_string(entity->initiative);
+        storage.push_back(new CircDLelement<int>((entity->initiative), label));
 
         delete entity;
 
