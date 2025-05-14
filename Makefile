@@ -1,6 +1,6 @@
-all: main
+all: RPG
 
-main: main.cc menu.cc game.cc
+RPG: main.cc menu.cc game.cc
 	g++ -o RPG main.cc menu.cc game.cc -lncurses
 
 clean:

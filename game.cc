@@ -1,9 +1,23 @@
 #include "game.h"
+#include "actor.h"
+#include "inventory.h"
+//#include "Bridgineer.h"
 #include <ncurses.h>
 #include <unistd.h>
 #include <cstring>
 
+void printInventory(WINDOW* win, BSTNode* node, int& row) {
+	if (!node) return;
+
+	printInventory(win, node->left, row);
+	wattron(win, COLOR_PAIR(2));
+	mvwprintw(win, row++, 4, "%s (x%d)", node->item->name.c_str(), node->item->quantity);
+	wattroff(win, COLOR_PAIR(2));
+	printInventory(win, node->right, row);
+}
+
 void startGame() {
+	//initialize
 	initscr();
 	cbreak();
 	noecho();
@@ -54,14 +68,21 @@ void startGame() {
 	WINDOW* gameWin = newwin(win_height, win_width, starty, startx);
 	keypad(gameWin, TRUE);
 	nodelay(gameWin, TRUE);
-	
-	enum GameMode { MAIN_GAME, TAB_MENU };
-	GameMode currentMode = MAIN_GAME;
+
+	//Game Components 
+	Hero* player = new Tank();
+	InventoryBST inventory;
+	inventory.addItem("Health Potion", 3, 50, 20);
+	inventory.addItem("Mana Elixer", 2, 70, 15);
+	inventory.addItem("Key of Wisdom", 1, 0, 0, true);
 
 	const char* tabs[] = {"Inventory", "Map", "Character"};
 	int currentTab = 0;
 	int numTabs = sizeof(tabs) / sizeof(tabs[0]);
-
+	
+	enum GameMode { MAIN_GAME, TAB_MENU };
+	GameMode currentMode = MAIN_GAME;
+	
 	bool running = true;
 	while (running) {
 		werase(gameWin);
@@ -82,17 +103,15 @@ void startGame() {
 		mvwaddch(gameWin, win_height -1, 0, '+');
 		mvwaddch(gameWin, win_height -1, win_width -1, '+');
 		wattroff(gameWin, COLOR_PAIR(3));
+
 		//Game View
 		if (currentMode == MAIN_GAME) {
 			wattron(gameWin, COLOR_PAIR(3));
 			mvwprintw(gameWin, 4, 4, "Main Game Running...");
 			mvwprintw(gameWin, 6, 4, "Press ESC to open your menu.");
 			wattroff(gameWin, COLOR_PAIR(3));
-		}
-
-		//Tab Menu
-		if (currentMode == TAB_MENU) {
-
+		} else {
+		//Tab Menu	
 		int tab_row = win_height - 4;
 		int spacing = win_width / (numTabs + 1);
 
@@ -111,13 +130,25 @@ void startGame() {
 			wattroff(gameWin, COLOR_PAIR(2));
 		}
 
-		wattron(gameWin, COLOR_PAIR(3));
-		mvwprintw(gameWin, 4, 4, "You are in the %s tab!", tabs[currentTab]);
-		mvwprintw(gameWin, 6, 4, "Press ESC to return to the game.");
-		wattroff(gameWin, COLOR_PAIR(3));
+		if (currentTab ==  0) {
+			mvwprintw(gameWin, 4, 4, "Inventory:");
+			int row = 6;
+			printInventory(gameWin, inventory.getRoot(), row);
+		}
+		else if (currentTab == 1) {
+			mvwprintw(gameWin, 4, 4, "Map: (Work in progess)");
+		}
+		else if (currentTab == 2) {
+			mvwprintw(gameWin, 4, 4, "Character Stats:");
+			mvwprintw(gameWin, 6, 4, "Health: %d", player->get_health());
+			mvwprintw(gameWin, 7, 4, "Shield: %d", player->get_shield());
+			mvwprintw(gameWin, 8, 4, "Damage: %d", player->get_damage());
+			//mvwprintw(gameWin, 9, 4, "Initiative: %d", playerInit->initiative);
+			}
 		}
 
 		wrefresh(gameWin);
+		
 		move(LINES - 1, 0);
 		clrtoeol();
 
@@ -134,7 +165,7 @@ void startGame() {
 			case 27: //ESC Key
 				if (currentMode == MAIN_GAME)
 					currentMode = TAB_MENU;
-				else 
+				else
 					currentMode = MAIN_GAME;
 				break;
 			case KEY_LEFT:
@@ -151,6 +182,7 @@ void startGame() {
 			}
 		}
 	}
+	delete player;
 	delwin(gameWin);
 	endwin();
 }

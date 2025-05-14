@@ -136,4 +136,8 @@ public:
         std::cout << "Inventory:\n";
         inOrderTraversal(root);
     }
+
+	BSTNode* getRoot() const {
+		return root;
+	}
 };
