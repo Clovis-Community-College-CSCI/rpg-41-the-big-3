@@ -137,7 +137,23 @@ public:
         inOrderTraversal(root);
     }
 
-	BSTNode* getRoot() const {
-		return root;
-	}
+    // Search for an item by name in the inventory
+    Item* search(const std::string& name) const {
+        BSTNode* current = root;
+        while (current) {
+            if (name < current->item->name) {
+                current = current->left;
+            } else if (current->item->name < name) {
+                current = current->right;
+            } else {
+                return current->item.get();
+            }
+        }
+        return nullptr;
+    }
+
+    // For ncurses display
+    BSTNode* getRoot() const {
+        return root;
+    }
 };
