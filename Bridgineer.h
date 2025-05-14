@@ -20,7 +20,7 @@ class HasInitiative {
   return speed;
   }
   
-    void set_speed(int newSpeed) {
+    static void set_speed(int newSpeed) {
         if (newSpeed >= 1 && newSpeed <= 40) {
             speed = newSpeed;
         } else {
@@ -39,21 +39,16 @@ class HasInitiative {
         return initiative;
     }
 
-    int dice() {
+    static void roll_Ini() {
         srand(time(0));
         int rando = (rand() % 20) + 1;
-        cout << rando << endl;
-        return rando;
-    }
-
-    void roll_4() {
-        initiative = speed + dice();
+        initiative = speed + rando;
     }
 
     HasInitiative(string x, int s) {
         set_name(x);
         set_speed(s);
-        roll_4();
+        roll_Ini();
     }
 
 };
