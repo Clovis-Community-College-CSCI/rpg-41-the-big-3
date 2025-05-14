@@ -39,6 +39,11 @@ class HasInitiative {
         return initiative;
     }
 
+    void set_Ini(int i) {
+        initiative = i;
+    }
+
+
      void roll_Ini() {
         srand(time(0));
         int rando = (rand() % 20) + 1;
